@@ -1,0 +1,4 @@
+(executable
+ (public_name solplot)
+ (name main)
+ (libraries solplot core owl gnuplot))
