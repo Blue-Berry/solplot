@@ -1,6 +1,12 @@
 open Float
 
-type t = (float * float * float) list
+type t = floatarray * floatarray * floatarray
+
+let valid_t (t : t) : bool =
+  let open Stdlib.Array.Floatarray in
+  let xs, ys, zs = t in
+  length xs = length ys && length xs = length zs
+;;
 
 (* Degrees to radians conversion *)
 let deg_to_rad deg = deg *. pi /. 180.0
@@ -26,44 +32,76 @@ let rotate_orbit x' y' omega omega2 i =
 ;;
 
 (* Generate orbit points *)
-let compute_orbit ~a ~e ~i_deg ~omega2_deg ~omega_deg ~num_points =
+
+let compute_orbit_section
+      ~a
+      ~e
+      ~i_deg
+      ~omega2_deg
+      ~omega_deg
+      ~num_points
+      ~start_rad
+      ~stop_rad
+  =
   let i = deg_to_rad i_deg in
   let omega2 = deg_to_rad omega2_deg in
   let omega = deg_to_rad omega_deg in
-  let step = 2.0 *. pi /. float_of_int num_points in
-  let rec loop theta acc =
-    if theta > 2.0 *. pi
-    then List.rev acc
+  let step = (stop_rad -. start_rad) /. Float.of_int num_points in
+  let result : floatarray * floatarray * floatarray =
+    Stdlib.Array.Floatarray.(create num_points, create num_points, create num_points)
+  in
+  let rec loop theta n =
+    if n < 0
+    then ()
     else (
       let r = a *. (1.0 -. (e *. e)) /. (1.0 +. (e *. cos theta)) in
       let x' = r *. cos theta in
       let y' = r *. sin theta in
       let x, y, z = rotate_orbit x' y' omega omega2 i in
-      loop (theta +. step) ((x, y, z) :: acc))
+      let xs, ys, zs = result in
+      let open Stdlib.Array.Floatarray in
+      set xs n x;
+      set ys n y;
+      set zs n z;
+      loop (theta +. step) (n - 1))
   in
-  loop 0.0 []
+  loop start_rad (num_points - 1);
+  assert (valid_t result);
+  result
 ;;
 
-
-let compute_orbit_section ~a ~e ~i_deg ~omega2_deg ~omega_deg ~num_points ~start_rad ~stop_rad =
-  let i = deg_to_rad i_deg in
-  let omega2 = deg_to_rad omega2_deg in
-  let omega = deg_to_rad omega_deg in
-  let step = (stop_rad -. start_rad) /. float_of_int num_points in
-  let rec loop theta acc =
-    if theta > stop_rad
-    then List.rev acc
-    else (
-      let r = a *. (1.0 -. (e *. e)) /. (1.0 +. (e *. cos theta)) in
-      let x' = r *. cos theta in
-      let y' = r *. sin theta in
-      let x, y, z = rotate_orbit x' y' omega omega2 i in
-      loop (theta +. step) ((x, y, z) :: acc))
-  in
-  loop start_rad []
+let compute_orbit ~a ~e ~i_deg ~omega2_deg ~omega_deg ~(num_points : int) : t =
+  compute_orbit_section
+    ~a
+    ~e
+    ~i_deg
+    ~omega2_deg
+    ~omega_deg
+    ~num_points
+    ~start_rad:0.0
+    ~stop_rad:(2.0 *. pi)
 ;;
 
+(* let to_array (orbit : t) =  *)
+
+(* let to_list (orbit : t) = List.map ~f:(fun (x, y, _) -> x, y) orbit *)
 
 module Gp = Gnuplot
 
-let to_gnuplot orbit = List.map (fun (x, y, _) -> x, y) orbit |> Gp.Series.lines_xy
+let to_gnuplot orbit =
+  assert (valid_t orbit);
+  let to_2list (xs, yx, _) =
+    let len = Stdlib.Array.Floatarray.length xs in
+    let rec loop i acc =
+      if i = len
+      then acc
+      else
+        let open Stdlib.Array.Floatarray in
+        loop (i + 1) ((get xs i, get yx i) :: acc)
+    in
+    loop 0 []
+  in
+  to_2list orbit |> Gp.Series.lines_xy
+;;
+
+let to_floatarrays (orbit : t) : floatarray * floatarray * floatarray = orbit

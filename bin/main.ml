@@ -1,4 +1,5 @@
-  module Gp = Gnuplot
+module Gp = Gnuplot
+
 (* Example usage *)
 let () =
   (* let a = 1.0 in      (* Semi-major axis (AU) *) *)
@@ -12,18 +13,91 @@ let () =
   let gp = Gp.create () in
   let open Solplot.Orbit in
   Gp.plot_many
-  ~output:(Gp.Output.create (`Png_cairo "plot.png")) gp [
-    (compute_orbit_section ~a:0.38709927 ~e:0.20563593 ~i_deg:7.00497902 ~omega2_deg:252.25032350 ~omega_deg:77.45779628 ~num_points:200 ~start_rad:0.0 ~stop_rad:(Float.pi) |> to_gnuplot);
-    (compute_orbit_section ~a:0.72333566 ~e:0.00677672 ~i_deg:3.39467605 ~omega2_deg:181.97909950 ~omega_deg:131.60246718 ~num_points:200 ~start_rad:0.0 ~stop_rad:(Float.pi) |> to_gnuplot);
-    (compute_orbit_section ~a:1.00000261 ~e:0.01671123 ~i_deg:(-0.00001531) ~omega2_deg:100.46457166 ~omega_deg:102.93768193 ~num_points:200 ~start_rad:0.0 ~stop_rad:(Float.pi) |> to_gnuplot);
-    (compute_orbit_section ~a:1.52371034 ~e:0.09339410 ~i_deg:1.84969142 ~omega2_deg:(-4.55343205) ~omega_deg:(-23.94362959) ~num_points:200 ~start_rad:0.0 ~stop_rad:(Float.pi) |> to_gnuplot);
-    (compute_orbit_section ~a:5.20288700 ~e:0.04838624 ~i_deg:1.30439695 ~omega2_deg:34.39644051 ~omega_deg:14.72847983 ~num_points:200 ~start_rad:0.0 ~stop_rad:(Float.pi) |> to_gnuplot);
-    (compute_orbit_section ~a:9.53667594 ~e:0.05386179 ~i_deg:2.48599187 ~omega2_deg:49.95424423 ~omega_deg:92.59887831 ~num_points:200 ~start_rad:0.0 ~stop_rad:(Float.pi) |> to_gnuplot);
-    (compute_orbit_section ~a:19.18916464 ~e:0.04725744 ~i_deg:0.77263783 ~omega2_deg:313.23810451 ~omega_deg:170.95427630 ~num_points:200 ~start_rad:0.0 ~stop_rad:(Float.pi) |> to_gnuplot);
-    (compute_orbit_section ~a:30.06992276 ~e:0.00859048 ~i_deg:1.77004347 ~omega2_deg:(-55.12002969) ~omega_deg:44.96476227 ~num_points:200 ~start_rad:0.0 ~stop_rad:(Float.pi) |> to_gnuplot);
-  ];
-  Gp.close gp;
-
+    ~output:(Gp.Output.create (`Png_cairo "plot.png"))
+    gp
+    [ compute_orbit_section
+        ~a:0.38709927
+        ~e:0.20563593
+        ~i_deg:7.00497902
+        ~omega2_deg:252.25032350
+        ~omega_deg:77.45779628
+        ~num_points:200
+        ~start_rad:0.0
+        ~stop_rad:Float.pi
+      |> to_gnuplot
+    ; compute_orbit_section
+        ~a:0.72333566
+        ~e:0.00677672
+        ~i_deg:3.39467605
+        ~omega2_deg:181.97909950
+        ~omega_deg:131.60246718
+        ~num_points:200
+        ~start_rad:0.0
+        ~stop_rad:Float.pi
+      |> to_gnuplot
+    ; compute_orbit_section
+        ~a:1.00000261
+        ~e:0.01671123
+        ~i_deg:(-0.00001531)
+        ~omega2_deg:100.46457166
+        ~omega_deg:102.93768193
+        ~num_points:200
+        ~start_rad:0.0
+        ~stop_rad:Float.pi
+      |> to_gnuplot
+    ; compute_orbit_section
+        ~a:1.52371034
+        ~e:0.09339410
+        ~i_deg:1.84969142
+        ~omega2_deg:(-4.55343205)
+        ~omega_deg:(-23.94362959)
+        ~num_points:200
+        ~start_rad:0.0
+        ~stop_rad:Float.pi
+      |> to_gnuplot
+    ; compute_orbit_section
+        ~a:5.20288700
+        ~e:0.04838624
+        ~i_deg:1.30439695
+        ~omega2_deg:34.39644051
+        ~omega_deg:14.72847983
+        ~num_points:200
+        ~start_rad:0.0
+        ~stop_rad:Float.pi
+      |> to_gnuplot
+    ; compute_orbit_section
+        ~a:9.53667594
+        ~e:0.05386179
+        ~i_deg:2.48599187
+        ~omega2_deg:49.95424423
+        ~omega_deg:92.59887831
+        ~num_points:200
+        ~start_rad:0.0
+        ~stop_rad:Float.pi
+      |> to_gnuplot
+    ; compute_orbit_section
+        ~a:19.18916464
+        ~e:0.04725744
+        ~i_deg:0.77263783
+        ~omega2_deg:313.23810451
+        ~omega_deg:170.95427630
+        ~num_points:200
+        ~start_rad:0.0
+        ~stop_rad:Float.pi
+      |> to_gnuplot
+    ; compute_orbit_section
+        ~a:30.06992276
+        ~e:0.00859048
+        ~i_deg:1.77004347
+        ~omega2_deg:(-55.12002969)
+        ~omega_deg:44.96476227
+        ~num_points:200
+        ~start_rad:0.0
+        ~stop_rad:Float.pi
+      |> to_gnuplot
+    ];
+  Gp.close gp
+;;
 
 (*                  a              e               I                L            long.peri.      long.node. *)
 (*            au, au/Cy     rad, rad/Cy     deg, deg/Cy      deg, deg/Cy      deg, deg/Cy     deg, deg/Cy *)

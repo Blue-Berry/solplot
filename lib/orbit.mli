@@ -28,3 +28,4 @@ val compute_orbit_section
   -> t
 
 val to_gnuplot : t -> Gnuplot.Series.t
+val to_floatarrays : t -> floatarray * floatarray * floatarray
