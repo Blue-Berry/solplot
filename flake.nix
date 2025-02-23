@@ -41,6 +41,7 @@
               cohttp-lwt-unix
               owl
               gnuplot
+              alcotest
             ];
           };
 
