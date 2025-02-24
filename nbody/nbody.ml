@@ -122,7 +122,7 @@ let () =
   offset_momentum bodies;
   Printf.printf "%.9f\n" (energy bodies);
   let n_mod = n / 250 in
-  let xy : (float * float) array = Array.make 250 (0.0, 0.0) in
+  let xy : (float * float) array = Array.make 1000 (0.0, 0.0) in
   print_endline (string_of_int n_mod);
   let i' = ref 0 in
   for i = 0 to n - 1 do
